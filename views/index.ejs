@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cheap Flight Explorer</title>
+    <link rel="stylesheet" type="text/css" href="styles/main.css" />
+  </head>
+
+  <body>
+    <h1>Cheap Flight Explorer</h1>
+    <img src="images/flight.png" />
+    <div>
+      <p>...</p>
+    </div>
+    <p>
+      <% if (locals.flights) { %>
+        <p><%= flights.id %></p>
+        <p><%= flights.local_departure %></p>
+        <p><%= flights.price %></p>
+      <% } else { %>
+        <a href="./flights">Check the cheapest flight to Riga from Vilnius</a>
+      <% } %>
+    </p>
+  </body>
+</html>
