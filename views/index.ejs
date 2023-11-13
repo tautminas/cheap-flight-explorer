@@ -8,17 +8,45 @@
   <body>
     <h1>Cheap Flight Explorer</h1>
     <img src="images/flight.png" />
-    <div>
-      <p>...</p>
-    </div>
+    <p>Find the cheapest one way flight ticket options to your dream country from the nearest airport!</p>
+    <form action="/flights" method="get">
+      <!-- Origin Input -->
+      <label for="origin">IATA code of <em>origin airport</em>:</label>
+      <input type="text" id="origin" name="origin" placeholder="E.g. VNO" required>
+      
+      <br />
+  
+      <!-- Destination Input -->
+      <label for="destination">Alpha-2 code of <em>destination country</em>:</label>
+      <input type="text" id="destination" name="destination" placeholder="E.g. FR" required>
+      
+      <br />
+  
+      <!-- Flight interval Input -->
+      <label for="interval">Number of days from current day till flight:</label>
+      <input type="number" id="interval" name="interval" placeholder="E.g. 7" required>
+
+      <!-- <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="start-date">
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="end-date"> -->
+  
+      <!-- Submit Button -->
+      <input type="submit" value="Search">
+    </form>
     <p>
       <% if (locals.flights) { %>
         <p><%= flights.id %></p>
         <p><%= flights.local_departure %></p>
         <p><%= flights.price %></p>
+        <p><%= flights.cityFrom %></p>
+        <p><%= flights.countryFrom.name %></p>
+        <p><%= flights.cityTo %></p>
+        <p><%= flights.countryTo.name %></p>
       <% } else { %>
         <a href="./flights">Check the cheapest flight to Riga from Vilnius</a>
       <% } %>
     </p>
+    
   </body>
 </html>
