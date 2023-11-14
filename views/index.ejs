@@ -2,40 +2,130 @@
 <html>
   <head>
     <title>Cheap Flight Explorer</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" type="text/css" href="styles/main.css" />
   </head>
 
-  <body>
-    <h1>Cheap Flight Explorer</h1>
-    <img src="images/flight.png" />
-    <p>Find the cheapest one way flight ticket options to your dream country from the nearest airport!</p>
-    <form action="/flights" method="get">
-      <!-- Origin Input -->
-      <label for="origin">IATA code of <em>origin airport</em>:</label>
-      <input type="text" id="origin" name="origin" placeholder="E.g. VNO" required>
-      
-      <br />
-  
-      <!-- Destination Input -->
-      <label for="destination">Alpha-2 code of <em>destination country</em>:</label>
-      <input type="text" id="destination" name="destination" placeholder="E.g. FR" required>
-      
-      <br />
-  
-      <!-- Flight interval Input -->
-      <label for="interval">Number of days from current day till flight:</label>
-      <input type="number" id="interval" name="interval" placeholder="E.g. 7" required>
+  <body class="container">
+    <header class="text-center my-5">
+      <h1>Cheap Flight Explorer</h1>
+      <img
+        src="images/flight.png"
+        alt="Flight"
+        class="img-fluid my-3"
+        style="max-width: 200px"
+      />
+      <p class="lead">
+        Find the cheapest one-way flight ticket options to your dream country
+        from the nearest airport!
+      </p>
+    </header>
 
-      <!-- <label for="start-date">Start Date:</label>
-      <input type="date" id="start-date" name="start-date">
-      <label for="end-date">End Date:</label>
-      <input type="date" id="end-date" name="end-date"> -->
-  
-      <!-- Submit Button -->
-      <input type="submit" value="Search">
-    </form>
-    <p>
-      <% if (locals.flights) { %>
+    <main class="mb-5">
+      <form
+        action="/flights"
+        method="get"
+        class="row g-3 justify-content-center"
+      >
+        <!-- Origin Input -->
+        <div class="col-md-6">
+          <label for="origin" class="form-label">Origin:</label>
+          <input
+            type="text"
+            id="origin"
+            name="origin"
+            class="form-control"
+            placeholder="E.g. VNO"
+            required
+          />
+          <div class="form-text">
+            Specify either the airport (<a
+              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+              target="_blank"
+              >IATA code</a
+            >), city (<a
+              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+              >IATA metro code)</a
+            >
+            or country (<a
+              href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
+              target="_blank"
+              >ISO 3166 Alpha-2 code</a
+            >). Multiple values can be passed separated by the comma.
+          </div>
+        </div>
+
+        <!-- Destination Input -->
+        <div class="col-md-6">
+          <label for="destination" class="form-label">Destination:</label>
+          <input
+            type="text"
+            id="destination"
+            name="destination"
+            class="form-control"
+            placeholder="E.g. FR"
+            required
+          />
+          <div class="form-text">
+            Specify either the airport (<a
+              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+              target="_blank"
+              >IATA code</a
+            >), city (<a
+              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+              >IATA metro code)</a
+            >
+            or country (<a
+              href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
+              target="_blank"
+              >ISO 3166 Alpha-2 code</a
+            >). Multiple values can be passed separated by the comma.
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="start-date" class="form-label">Start Date:</label>
+          <input
+            type="date"
+            id="start-date"
+            name="start"
+            class="form-control"
+            required
+            min="<%= new Date().toISOString().split('T')[0] %>"
+            value="<%= new Date().toISOString().split('T')[0] %>"
+          />
+          <div class="form-text">Please select the start date.</div>
+        </div>
+
+        <!-- End Date Input -->
+        <div class="col-md-6">
+          <label for="end-date" class="form-label">End Date:</label>
+          <input
+            type="date"
+            id="end-date"
+            name="end"
+            class="form-control"
+            required
+            min="<%= new Date().toISOString().split('T')[0] %>"
+            value="<%= new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+          />
+          <div class="form-text">Please select the end date.</div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-12 text-center">
+          <button type="submit" class="btn btn-primary btn-lg">Search</button>
+        </div>
+      </form>
+
+      <div class="text-center">
+        <% if (locals.flights) { %>
+        <!-- Display flight details -->
         <p><%= flights.id %></p>
         <p><%= flights.local_departure %></p>
         <p><%= flights.price %></p>
@@ -43,10 +133,15 @@
         <p><%= flights.countryFrom.name %></p>
         <p><%= flights.cityTo %></p>
         <p><%= flights.countryTo.name %></p>
-      <% } else { %>
-        <a href="./flights">Check the cheapest flight to Riga from Vilnius</a>
-      <% } %>
-    </p>
-    
+        <% } %>
+      </div>
+    </main>
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

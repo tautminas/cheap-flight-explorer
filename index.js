@@ -55,22 +55,29 @@ app.get("/", (req, res) => {
 });
 
 app.get("/flights", async (req, res) => {
-  const { origin, destination, interval } = req.query;
+  const { origin, destination, interval, start, end } = req.query;
 
   console.log("Received form data:");
   console.log("origin:", origin);
   console.log("destination:", destination);
   console.log("interval:", interval);
+  console.log("start:", start);
+  console.log("end:", end);
 
-  params.date_to = new Date(
-    new Date().getTime() + interval * 24 * 60 * 60 * 1000
-  ).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  });
+  let startDate = new Date(start);
+  let endDate = new Date(end);
+
+  if (endDate < startDate) {
+    [startDate, endDate] = [endDate, startDate];
+  }
+
+  startDate = startDate.toLocaleDateString("en-GB");
+  endDate = endDate.toLocaleDateString("en-GB");
+
   params.fly_from = origin;
   params.fly_to = destination;
+  params.date_from = startDate;
+  params.date_to = endDate;
 
   console.log("params:", params);
 
