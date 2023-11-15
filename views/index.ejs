@@ -29,7 +29,7 @@
     <main class="mb-5">
       <form
         action="/flights"
-        method="get"
+        method="post"
         class="row g-3 justify-content-center"
       >
         <!-- Origin Input -->
@@ -69,10 +69,11 @@
             name="destination"
             class="form-control"
             placeholder="E.g. FR"
-            required
           />
           <div class="form-text">
-            Specify either the airport (<a
+            This input can be ommited for getting aggregated results for
+            destination airports relevant to the departure location. Specify
+            either the airport (<a
               href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
               target="_blank"
               >IATA code</a
@@ -89,32 +90,93 @@
         </div>
 
         <div class="col-md-6">
-          <label for="start-date" class="form-label">Start Date:</label>
+          <label for="date-from" class="form-label">Date from:</label>
           <input
             type="date"
-            id="start-date"
-            name="start"
+            id="date-from"
+            name="date-from"
             class="form-control"
             required
             min="<%= new Date().toISOString().split('T')[0] %>"
             value="<%= new Date().toISOString().split('T')[0] %>"
           />
-          <div class="form-text">Please select the start date.</div>
+          <div class="form-text">
+            Select date for the earliest desired outbound flight departure.
+          </div>
         </div>
 
         <!-- End Date Input -->
         <div class="col-md-6">
-          <label for="end-date" class="form-label">End Date:</label>
+          <label for="date-to" class="form-label">Date to:</label>
           <input
             type="date"
-            id="end-date"
-            name="end"
+            id="date-to"
+            name="date-to"
             class="form-control"
             required
             min="<%= new Date().toISOString().split('T')[0] %>"
             value="<%= new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
           />
-          <div class="form-text">Please select the end date.</div>
+          <div class="form-text">
+            Select date for the latest desired outbound flight departure.
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="nights-in-dst-from" class="form-label"
+            >Minimal length of stay in the destination in days:</label
+          >
+          <input
+            type="number"
+            id="nights-in-dst-from"
+            name="nights-in-dst-from"
+            class="form-control"
+            placeholder="E.g. 5"
+            min="1"
+            max="100"
+            value="5"
+          />
+          <div class="form-text">
+            Either both min and max parameters of nights in the destination have
+            to be specified or none of them. If none are specified only one-way
+            flight tickets will be analysed.
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="nights-in-dst-to" class="form-label"
+            >Maximal length of stay in the destination in days:</label
+          >
+          <input
+            type="number"
+            id="nights-in-dst-to"
+            name="nights-in-dst-to"
+            class="form-control"
+            placeholder="E.g. 12"
+            min="1"
+            max="100"
+            value="12"
+          />
+          <div class="form-text">
+            Either both min and max parameters of nights in the destination have
+            to be specified or none of them. If none are specified only one-way
+            flight tickets will be analysed.
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="adults" class="form-label">Number of adults:</label>
+          <input
+            type="number"
+            id="adults"
+            name="adults"
+            class="form-control"
+            placeholder="E.g. 2"
+            min="1"
+            max="9"
+            value="2"
+          />
+          <div class="form-text">Number of adults cannot be greater than 9</div>
         </div>
 
         <!-- Submit Button -->

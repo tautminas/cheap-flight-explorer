@@ -19,30 +19,6 @@ const headers = {
 };
 
 const params = {
-  fly_from: `VNO`,
-  fly_to: `FR`,
-  date_from: new Date().toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  }),
-  // date_to: new Date(
-  //   new Date().setMonth(new Date().getMonth() + 1)
-  // ).toLocaleDateString("en-GB", {
-  //   day: "numeric",
-  //   month: "numeric",
-  //   year: "numeric",
-  // }),
-  date_to: new Date(
-    new Date().setDate(new Date().getDate() + 2)
-  ).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  }),
-  // nights_in_dst_from: "7",
-  // nights_in_dst_to: "28",
-  // flight_type: "round",
   curr: "EUR",
   sort: "price",
 };
@@ -54,30 +30,28 @@ app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
-app.get("/flights", async (req, res) => {
-  const { origin, destination, interval, start, end } = req.query;
+app.post("/flights", async (req, res) => {
+  const { origin, destination, adults } = req.body;
+  const nightsFrom = req.body["nights-in-dst-from"];
+  const nightsTo = req.body["nights-in-dst-to"];
 
-  console.log("Received form data:");
-  console.log("origin:", origin);
-  console.log("destination:", destination);
-  console.log("interval:", interval);
-  console.log("start:", start);
-  console.log("end:", end);
-
-  let startDate = new Date(start);
-  let endDate = new Date(end);
-
-  if (endDate < startDate) {
-    [startDate, endDate] = [endDate, startDate];
+  let dateFrom = req.body["date-from"];
+  let dateTo = req.body["date-to"];
+  dateFrom = new Date(dateFrom);
+  dateTo = new Date(dateTo);
+  if (dateTo < dateFrom) {
+    [dateFrom, dateTo] = [dateTo, dateFrom];
   }
-
-  startDate = startDate.toLocaleDateString("en-GB");
-  endDate = endDate.toLocaleDateString("en-GB");
+  dateFrom = dateFrom.toLocaleDateString("en-GB");
+  dateTo = dateTo.toLocaleDateString("en-GB");
 
   params.fly_from = origin;
   params.fly_to = destination;
-  params.date_from = startDate;
-  params.date_to = endDate;
+  params.date_from = dateFrom;
+  params.date_to = dateTo;
+  params.nights_in_dst_from = nightsFrom;
+  params.nights_in_dst_to = nightsTo;
+  params.adults = adults;
 
   console.log("params:", params);
 
@@ -92,7 +66,6 @@ app.get("/flights", async (req, res) => {
       JSON.stringify(result.data, null, 2)
     );
     console.log("Result written to api_result.json");
-    // console.log(result.data.data[0].id);
     res.render("index.ejs", {
       flights: result.data.data[0],
     });
@@ -103,5 +76,7 @@ app.get("/flights", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(
+    `Server is running on port ${port}. URL: http://localhost:${port}/`
+  );
 });
