@@ -18,11 +18,11 @@
         src="images/flight.png"
         alt="Flight"
         class="img-fluid my-3"
-        style="max-width: 200px"
+        style="max-width: 90px"
       />
       <p class="lead">
-        Find the cheapest one-way flight ticket options to your dream country
-        from the nearest airport!
+        Find the cheapest flight option to your dream destination from the
+        desired airport!
       </p>
     </header>
 
@@ -50,6 +50,7 @@
               >IATA code</a
             >), city (<a
               href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+              target="_blank"
               >IATA metro code)</a
             >
             or country (<a
@@ -79,6 +80,7 @@
               >IATA code</a
             >), city (<a
               href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+              target="_blank"
               >IATA metro code)</a
             >
             or country (<a
@@ -185,18 +187,33 @@
         </div>
       </form>
 
-      <div class="text-center">
-        <% if (locals.flights) { %>
-        <!-- Display flight details -->
-        <p><%= flights.id %></p>
-        <p><%= flights.local_departure %></p>
-        <p><%= flights.price %></p>
-        <p><%= flights.cityFrom %></p>
-        <p><%= flights.countryFrom.name %></p>
-        <p><%= flights.cityTo %></p>
-        <p><%= flights.countryTo.name %></p>
-        <% } %>
+      <% if (locals.flights) { %>
+      <div class="text-center pt-3">
+        <h2 class="search-result">Cheapest option</h2>
+        <p>Total price: <strong><%= flights.price %></strong>€</p>
+        <div class="row">
+          <% flights.route.forEach(function(item) { %>
+          <div class="col-12">
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">
+                  From <%= item.cityFrom %> to <%= item.cityTo %>
+                </h5>
+                <p class="card-text">
+                  <strong>Departure (<em>local time</em>):</strong> <%= new
+                  Date(item.local_departure).toLocaleString({ timeZone: 'UTC'
+                  }).replace(',', '') %> | <strong>From:</strong> <%=
+                  item.flyFrom %> | <strong>To:</strong> <%= item.flyTo %> |
+                  <strong>Airline:</strong> <%= item.airline %>
+                </p>
+                <!-- You can add more details as needed -->
+              </div>
+            </div>
+          </div>
+          <% }); %>
+        </div>
       </div>
+      <% } %>
     </main>
 
     <script
