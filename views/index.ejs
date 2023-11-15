@@ -9,218 +9,245 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" type="text/css" href="styles/main.css" />
-  </head>
-
-  <body class="container">
-    <header class="text-center my-5">
-      <h1>Cheap Flight Explorer</h1>
-      <img
-        src="images/flight.png"
-        alt="Flight"
-        class="img-fluid my-3"
-        style="max-width: 90px"
-      />
-      <p class="lead">
-        Find the cheapest flight option to your dream destination from the
-        desired airport!
-      </p>
-    </header>
-
-    <main class="mb-5">
-      <form
-        action="/flights"
-        method="post"
-        class="row g-3 justify-content-center"
-      >
-        <!-- Origin Input -->
-        <div class="col-md-6">
-          <label for="origin" class="form-label">Origin:</label>
-          <input
-            type="text"
-            id="origin"
-            name="origin"
-            class="form-control"
-            placeholder="E.g. VNO"
-            required
-          />
-          <div class="form-text">
-            Specify either the airport (<a
-              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
-              target="_blank"
-              >IATA code</a
-            >), city (<a
-              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
-              target="_blank"
-              >IATA metro code)</a
-            >
-            or country (<a
-              href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
-              target="_blank"
-              >ISO 3166 Alpha-2 code</a
-            >). Multiple values can be passed separated by the comma.
-          </div>
-        </div>
-
-        <!-- Destination Input -->
-        <div class="col-md-6">
-          <label for="destination" class="form-label">Destination:</label>
-          <input
-            type="text"
-            id="destination"
-            name="destination"
-            class="form-control"
-            placeholder="E.g. FR"
-          />
-          <div class="form-text">
-            This input can be ommited for getting aggregated results for
-            destination airports relevant to the departure location. Specify
-            either the airport (<a
-              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
-              target="_blank"
-              >IATA code</a
-            >), city (<a
-              href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
-              target="_blank"
-              >IATA metro code)</a
-            >
-            or country (<a
-              href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
-              target="_blank"
-              >ISO 3166 Alpha-2 code</a
-            >). Multiple values can be passed separated by the comma.
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label for="date-from" class="form-label">Date from:</label>
-          <input
-            type="date"
-            id="date-from"
-            name="date-from"
-            class="form-control"
-            required
-            min="<%= new Date().toISOString().split('T')[0] %>"
-            value="<%= new Date().toISOString().split('T')[0] %>"
-          />
-          <div class="form-text">
-            Select date for the earliest desired outbound flight departure.
-          </div>
-        </div>
-
-        <!-- End Date Input -->
-        <div class="col-md-6">
-          <label for="date-to" class="form-label">Date to:</label>
-          <input
-            type="date"
-            id="date-to"
-            name="date-to"
-            class="form-control"
-            required
-            min="<%= new Date().toISOString().split('T')[0] %>"
-            value="<%= new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
-          />
-          <div class="form-text">
-            Select date for the latest desired outbound flight departure.
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <label for="nights-in-dst-from" class="form-label"
-            >Minimal length of stay in the destination in days:</label
-          >
-          <input
-            type="number"
-            id="nights-in-dst-from"
-            name="nights-in-dst-from"
-            class="form-control"
-            placeholder="E.g. 5"
-            min="1"
-            max="100"
-            value="5"
-          />
-          <div class="form-text">
-            Either both min and max parameters of nights in the destination have
-            to be specified or none of them. If none are specified only one-way
-            flight tickets will be analysed.
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <label for="nights-in-dst-to" class="form-label"
-            >Maximal length of stay in the destination in days:</label
-          >
-          <input
-            type="number"
-            id="nights-in-dst-to"
-            name="nights-in-dst-to"
-            class="form-control"
-            placeholder="E.g. 12"
-            min="1"
-            max="100"
-            value="12"
-          />
-          <div class="form-text">
-            Either both min and max parameters of nights in the destination have
-            to be specified or none of them. If none are specified only one-way
-            flight tickets will be analysed.
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <label for="adults" class="form-label">Number of adults:</label>
-          <input
-            type="number"
-            id="adults"
-            name="adults"
-            class="form-control"
-            placeholder="E.g. 2"
-            min="1"
-            max="9"
-            value="2"
-          />
-          <div class="form-text">Number of adults cannot be greater than 9</div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="col-12 text-center">
-          <button type="submit" class="btn btn-primary btn-lg">Search</button>
-        </div>
-      </form>
-
-      <% if (locals.flights) { %>
-      <div class="text-center pt-3">
-        <h2 class="search-result">Cheapest option</h2>
-        <p>Total price: <strong><%= flights.price %></strong>€</p>
-        <div class="row">
-          <% flights.route.forEach(function(item) { %>
-          <div class="col-12">
-            <div class="card mb-3">
-              <div class="card-body">
-                <h5 class="card-title">
-                  From <%= item.cityFrom %> to <%= item.cityTo %>
-                </h5>
-                <p class="card-text">
-                  <strong>Departure (<em>local time</em>):</strong> <%= new
-                  Date(item.local_departure).toLocaleString({ timeZone: 'UTC'
-                  }).replace(',', '') %> | <strong>From:</strong> <%=
-                  item.flyFrom %> | <strong>To:</strong> <%= item.flyTo %> |
-                  <strong>Airline:</strong> <%= item.airline %>
-                </p>
-                <!-- You can add more details as needed -->
-              </div>
-            </div>
-          </div>
-          <% }); %>
-        </div>
-      </div>
-      <% } %>
-    </main>
-
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+  </head>
+
+  <body>
+    <section class="header-section">
+      <div class="container">
+        <header class="text-center my-5">
+          <h1>Cheap Flight Explorer</h1>
+          <img
+            src="images/flight.png"
+            alt="Flight"
+            class="img-fluid my-3"
+            style="max-width: 90px"
+          />
+          <p class="lead">
+            Find the cheapest flight option to your dream destination from the
+            desired airport!
+          </p>
+        </header>
+      </div>
+    </section>
+
+    <section class="main-section">
+      <div class="container">
+        <main class="mb-5">
+          <form
+            action="/flights"
+            method="post"
+            class="row g-3 justify-content-center mb-5"
+          >
+            <!-- Origin Input -->
+            <div class="col-md-6">
+              <label for="origin" class="form-label">Origin:</label>
+              <input
+                type="text"
+                id="origin"
+                name="origin"
+                class="form-control"
+                placeholder="E.g. VNO"
+                required
+              />
+              <div class="form-text">
+                Specify either the airport (<a
+                  href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+                  target="_blank"
+                  >IATA code</a
+                >), city (<a
+                  href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+                  target="_blank"
+                  >IATA metro code)</a
+                >
+                or country (<a
+                  href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
+                  target="_blank"
+                  >ISO 3166 Alpha-2 code</a
+                >). Multiple values can be passed separated by the comma.
+              </div>
+            </div>
+
+            <!-- Destination Input -->
+            <div class="col-md-6">
+              <label for="destination" class="form-label">Destination:</label>
+              <input
+                type="text"
+                id="destination"
+                name="destination"
+                class="form-control"
+                placeholder="E.g. FR"
+              />
+              <div class="form-text">
+                This input can be ommited for getting aggregated results for
+                destination airports relevant to the departure location. Specify
+                either the airport (<a
+                  href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+                  target="_blank"
+                  >IATA code</a
+                >), city (<a
+                  href="https://www.nationsonline.org/oneworld/IATA_Codes/airport_code_list.htm"
+                  target="_blank"
+                  >IATA metro code)</a
+                >
+                or country (<a
+                  href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements"
+                  target="_blank"
+                  >ISO 3166 Alpha-2 code</a
+                >). Multiple values can be passed separated by the comma.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="date-from" class="form-label">Date from:</label>
+              <input
+                type="date"
+                id="date-from"
+                name="date-from"
+                class="form-control"
+                required
+                min="<%= new Date().toISOString().split('T')[0] %>"
+                value="<%= new Date().toISOString().split('T')[0] %>"
+              />
+              <div class="form-text">
+                Select date for the earliest desired outbound flight departure.
+              </div>
+            </div>
+
+            <!-- End Date Input -->
+            <div class="col-md-6">
+              <label for="date-to" class="form-label">Date to:</label>
+              <input
+                type="date"
+                id="date-to"
+                name="date-to"
+                class="form-control"
+                required
+                min="<%= new Date().toISOString().split('T')[0] %>"
+                value="<%= new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+              />
+              <div class="form-text">
+                Select date for the latest desired outbound flight departure.
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label for="nights-in-dst-from" class="form-label"
+                >Min number of nights:</label
+              >
+              <input
+                type="number"
+                id="nights-in-dst-from"
+                name="nights-in-dst-from"
+                class="form-control"
+                placeholder="E.g. 5"
+                min="1"
+                max="100"
+                value="5"
+              />
+              <div class="form-text">
+                Either both min and max parameters of nights in the destination
+                have to be specified or none of them. If none are specified only
+                one-way flight tickets will be analysed.
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label for="nights-in-dst-to" class="form-label"
+                >Max number of nights:</label
+              >
+              <input
+                type="number"
+                id="nights-in-dst-to"
+                name="nights-in-dst-to"
+                class="form-control"
+                placeholder="E.g. 12"
+                min="1"
+                max="100"
+                value="12"
+              />
+              <div class="form-text">
+                Either both min and max parameters of nights in the destination
+                have to be specified or none of them. If none are specified only
+                one-way flight tickets will be analysed.
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label for="adults" class="form-label">Number of adults:</label>
+              <input
+                type="number"
+                id="adults"
+                name="adults"
+                class="form-control"
+                placeholder="E.g. 2"
+                min="1"
+                max="9"
+                value="2"
+              />
+              <div class="form-text">
+                Number of adults cannot be greater than 9
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12 text-center">
+              <button type="submit" class="btn btn-primary btn-lg">
+                Search
+              </button>
+            </div>
+          </form>
+
+          <% if (locals.flights) { %>
+          <div class="text-center">
+            <h2 class="search-result">Cheapest option</h2>
+            <p>Total price: <strong><%= flights.price %></strong>€</p>
+            <div class="row">
+              <% flights.route.forEach(function(item) { %>
+              <div class="col-12">
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      From <%= item.cityFrom %> to <%= item.cityTo %>
+                    </h5>
+                    <p class="card-text">
+                      <strong>Departure (<em>local time</em>):</strong> <%= new
+                      Date(item.local_departure).toLocaleString({ timeZone:
+                      'UTC' }).replace(',', '') %> | <strong>From:</strong> <%=
+                      item.flyFrom %> | <strong>To:</strong> <%= item.flyTo %> |
+                      <strong>Airline:</strong> <%= item.airline %>
+                    </p>
+                    <!-- You can add more details as needed -->
+                  </div>
+                </div>
+              </div>
+              <% }); %>
+            </div>
+          </div>
+          <% } %>
+        </main>
+      </div>
+    </section>
+
+    <section class="footer-section">
+      <div class="container">
+        <footer class="footer text-center py-3">
+          <p>&copy; <%= new Date().getFullYear() %> Cheap Flight Explorer</p>
+        </footer>
+      </div>
+    </section>
+
+    <script>
+      const searchResultElement = document.querySelector(".search-result");
+
+      if (searchResultElement) {
+        searchResultElement.scrollIntoView({ behavior: "smooth" });
+      }
+    </script>
   </body>
 </html>
