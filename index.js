@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
-app.post("/flights", async (req, res) => {
+app.post("/", async (req, res) => {
   const { origin, destination, adults } = req.body;
   const nightsFrom = req.body["nights-in-dst-from"];
   const nightsTo = req.body["nights-in-dst-to"];
@@ -66,8 +66,11 @@ app.post("/flights", async (req, res) => {
       JSON.stringify(result.data, null, 2)
     );
     console.log("Result written to api_result.json");
+    params.date_from = req.body["date-from"];
+    params.date_to = req.body["date-to"];
     res.render("index.ejs", {
       flights: result.data.data[0],
+      params,
     });
   } catch (error) {
     console.log(error.response.data);
