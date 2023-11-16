@@ -40,7 +40,12 @@
       <div class="container">
         <% if (locals.errorMessage) { %>
           <div class="alert alert-danger" role="alert">
-            <%= errorMessage.error %>
+            <% if (locals.errorMessage.error) { %>
+              <%= errorMessage.error %>
+            <% } else if (locals.errorMessage.message) { %>
+              <%= errorMessage.message %>
+            <% } else { %>
+              <%= JSON.stringify(errorMessage) %>
           </div>
         <% } %>
         <main class="mb-5">
