@@ -82,7 +82,8 @@ app.post("/", async (req, res) => {
     });
   } catch (error) {
     console.log(error.response.data);
-    res.status(500);
+    const errorMessage = error.response.data;
+    res.status(500).render("index.ejs", { errorMessage });
   }
 });
 
