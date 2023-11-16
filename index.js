@@ -1,7 +1,6 @@
 import express from "express";
 import axios from "axios";
 import dotenv from "dotenv";
-import { promises as fsPromises } from "fs";
 import bodyParser from "body-parser";
 
 const app = express();
@@ -61,19 +60,11 @@ app.post("/", async (req, res) => {
     params.adults = adults;
   }
 
-  console.log("params:", params);
-
   try {
     const result = await axios.get(`${TEQUILA_API_ENDPOINT}/v2/search`, {
       headers: headers,
       params: params,
     });
-    // Write the result to a file
-    await fsPromises.writeFile(
-      "api_result.json",
-      JSON.stringify(result.data, null, 2)
-    );
-    console.log("Result written to api_result.json");
     params.date_from = req.body["date-from"];
     params.date_to = req.body["date-to"];
     res.render("index.ejs", {
@@ -81,7 +72,6 @@ app.post("/", async (req, res) => {
       params,
     });
   } catch (error) {
-    console.log(error.response.data);
     const errorMessage = error.response.data;
     res.status(500).render("index.ejs", { errorMessage });
   }
