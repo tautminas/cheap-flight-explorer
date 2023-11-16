@@ -46,12 +46,20 @@ app.post("/", async (req, res) => {
   dateTo = dateTo.toLocaleDateString("en-GB");
 
   params.fly_from = origin;
-  params.fly_to = destination;
   params.date_from = dateFrom;
   params.date_to = dateTo;
-  params.nights_in_dst_from = nightsFrom;
-  params.nights_in_dst_to = nightsTo;
-  params.adults = adults;
+  if (destination) {
+    params.fly_to = destination;
+  }
+  if (nightsFrom) {
+    params.nights_in_dst_from = nightsFrom;
+  }
+  if (nightsTo) {
+    params.nights_in_dst_to = nightsTo;
+  }
+  if (adults) {
+    params.adults = adults;
+  }
 
   console.log("params:", params);
 

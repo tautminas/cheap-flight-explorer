@@ -39,6 +39,7 @@
     <section class="main-section">
       <div class="container">
         <main class="mb-5">
+          <p class="text-muted">Please fill in all fields marked with an asterisk (*) as they are mandatory.</p>
           <form
             action="/"
             method="post"
@@ -46,7 +47,7 @@
           >
             <!-- Origin Input -->
             <div class="col-md-6">
-              <label for="origin" class="form-label">Origin:</label>
+              <label for="origin" class="form-label">Origin *</label>
               <input
                 type="text"
                 id="origin"
@@ -79,7 +80,7 @@
 
             <!-- Destination Input -->
             <div class="col-md-6">
-              <label for="destination" class="form-label">Destination:</label>
+              <label for="destination" class="form-label">Destination</label>
               <input
                 type="text"
                 id="destination"
@@ -111,7 +112,7 @@
             </div>
 
             <div class="col-md-6">
-              <label for="date-from" class="form-label">Date from:</label>
+              <label for="date-from" class="form-label">Date from *</label>
               <input
                 type="date"
                 id="date-from"
@@ -132,7 +133,7 @@
 
             <!-- End Date Input -->
             <div class="col-md-6">
-              <label for="date-to" class="form-label">Date to:</label>
+              <label for="date-to" class="form-label">Date to *</label>
               <input
                 type="date"
                 id="date-to"
@@ -165,9 +166,7 @@
                 max="100"
                 <% if (locals.params && locals.params.nights_in_dst_from) { %>
                   value="<%= locals.params.nights_in_dst_from %>"
-                <% } else {%>
-                  value="5"
-                <% }%>
+                <% } %>
               />
               <div class="form-text">
                 Either both min and max parameters of nights in the destination
@@ -178,7 +177,7 @@
 
             <div class="col-md-4">
               <label for="nights-in-dst-to" class="form-label"
-                >Max number of nights:</label
+                >Max number of nights</label
               >
               <input
                 type="number"
@@ -190,9 +189,7 @@
                 max="100"
                 <% if (locals.params && locals.params.nights_in_dst_to) { %>
                   value="<%= locals.params.nights_in_dst_to %>"
-                <% } else {%>
-                  value="12"
-                <% }%>
+                <% } %>
               />
               <div class="form-text">
                 Either both min and max parameters of nights in the destination
@@ -202,7 +199,7 @@
             </div>
 
             <div class="col-md-4">
-              <label for="adults" class="form-label">Number of adults:</label>
+              <label for="adults" class="form-label">Number of adults</label>
               <input
                 type="number"
                 id="adults"
@@ -213,9 +210,7 @@
                 max="9"
                 <% if (locals.params && locals.params.adults) { %>
                   value="<%= locals.params.adults %>"
-                <% } else {%>
-                  value="2"
-                <% }%>
+                <% } %>
               />
               <div class="form-text">
                 Number of adults cannot be greater than 9
@@ -232,27 +227,30 @@
 
           <% if (locals.flights) { %>
           <div class="text-center">
+            
             <h2 class="search-result">Cheapest option</h2>
             <p>Total price: <strong><%= flights.price %></strong>€</p>
             <div class="row">
               <% flights.route.forEach(function(item) { %>
-              <div class="col-12">
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      From <%= item.cityFrom %> to <%= item.cityTo %>
-                    </h5>
-                    <p class="card-text">
-                      <strong>Departure (<em>local time</em>):</strong> <%= new
-                      Date(item.local_departure).toLocaleString({ timeZone:
-                      'UTC' }).replace(',', '') %> | <strong>From:</strong> <%=
-                      item.flyFrom %> | <strong>To:</strong> <%= item.flyTo %> |
-                      <strong>Airline:</strong> <%= item.airline %>
-                    </p>
-                    <!-- You can add more details as needed -->
+                <a href="https://www.google.com/search?q=Airline+<%= encodeURIComponent(item.airline) %>" target="_blank" class="google-search-link">
+                <div class="col-12">
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        From <%= item.cityFrom %> to <%= item.cityTo %>
+                      </h5>
+                      <p class="card-text">
+                        <strong>Departure (<em>local time</em>):</strong> <%= new
+                        Date(item.local_departure).toLocaleString({ timeZone:
+                        'UTC' }).replace(',', '') %> | <strong>From:</strong> <%=
+                        item.flyFrom %> | <strong>To:</strong> <%= item.flyTo %> |
+                        <strong>Airline:</strong> <%= item.airline %>
+                      </p>
+                      <!-- You can add more details as needed -->
+                    </div>
                   </div>
                 </div>
-              </div>
+                </a>
               <% }); %>
             </div>
           </div>
